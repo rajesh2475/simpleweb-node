@@ -1,0 +1,24 @@
+# install python in the container
+FROM python:3.7
+# copy the local requirements.txt file to the 
+# /app/requirements.txt in the container
+# (the /app dir will be created)
+WORKDIR /nim
+
+
+COPY ./requirements.txt nim/app/requirements.txt
+
+RUN python -m pip install --upgrade pip
+RUN python -m pip install --no-use-pep517 bcrypt
+
+# install the packages from the requirements.txt file in the container
+RUN pip install -r ./nim/app/requirements.txt
+
+
+EXPOSE 8000
+
+COPY ./nim/ ./
+
+
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
